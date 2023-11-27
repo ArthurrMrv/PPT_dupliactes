@@ -1,15 +1,15 @@
 import sys
 import PyPDF2
-import tqdm
 
 # Get the file name from the command line
-# if len(sys.argv) < 2:
-#     print('Usage: python main.py <file_name>')
-#     sys.exit(1)
-# else:
-#     file_name = sys.argv[1]
-file_name = "/Users/arthurmorvan/Documents/Dev/Powerpoint/AIDAMS_Algo_Slides[48].pdf"
+if len(sys.argv) < 2:
+    print('Usage: python main.py <file_name>')
+    sys.exit(1)
+else:
+    file_name = sys.argv[1]
+
 pdf_name = file_name.split("/")[-1].split(".")[0]
+pdf_path = "/".join(file_name.split("/")[:-1])
 
 # Open the PDF file in a with indentation
 with open(file_name, 'rb') as pdf_file:
@@ -28,7 +28,7 @@ with open(file_name, 'rb') as pdf_file:
     to_save = []
     already_done = set()
     
-    for i in tqdm.tqdm(range(num_pages-1, -1, -1), desc="Processing pages"):
+    for i in range(num_pages-1, -1, -1):
         page_obj = pdf_reader.pages[i]
         
         text = page_obj.extract_text()
@@ -52,5 +52,5 @@ with open(file_name, 'rb') as pdf_file:
     pdf_writer = PyPDF2.PdfWriter()
     for page in to_save:
         pdf_writer.add_page(page)
-    with open(f'{pdf_name}(condensed).pdf', 'wb') as out:
+    with open(f'{pdf_path}/{pdf_name}(condensed).pdf', 'wb') as out:
         pdf_writer.write(out)
